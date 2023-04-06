@@ -1,32 +1,48 @@
 import throttle from 'lodash.throttle';
 
 
-const email = document.querySelector('.feedback-form input')
-const textarea = document.querySelector('.feedback-form textarea')
+const feedback = document.querySelector('.feedback-form ')
 const button = document.querySelector('.feedback-form button')
 
+const formData = {}
 
 
-email.addEventListener('input', onFormEmail);
-textarea.addEventListener('input', onFormTextarea);
+
 button.addEventListener('submit', onSubmit);
 
+feedback.addEventListener('input', e => {
+formData[e.target.name] = e.target.value;
+localStorage.setItem("feedback-form-state", JSON.stringify(formData))
+})
 
+ 
 
-function onFormEmail(evt) {
-    const massageEmail = evt.currentTarget.value.trim();
+function refreshTextarea() {
+    const savedMassage = JSON.parse(localStorage.getItem('feedback-form-state'));
+    if (savedMassage) {
+        feedback.value = savedMassage;
 
-    localStorage.setItem('feedback-form-state', massageEmail);
+    }
+    console.log(savedMassage)
 }
+refreshTextarea();
 
 
-function onFormTextarea(evt) {
-    const massageTextarea = evt.currentTarget.value.trim();
 
-    localStorage.setItem('feedback-form-state', massageTextarea);
+// function onFormEmail(evt) {
+//     const massageEmail = evt.currentTarget.value.trim();
 
-    console.log(massage)
-}
+//     localStorage.setItem('feedback-form-state', massageEmail);
+// }
+
+
+// function onFormTextarea(evt) {
+//     const massageTextarea = evt.currentTarget.value.trim();
+
+//     localStorage.setItem('feedback-form-state', massageTextarea);
+
+//     console.log(massage)
+// }
 
 
 function onSubmit(evt){}
