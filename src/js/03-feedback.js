@@ -2,47 +2,45 @@ import throttle from 'lodash.throttle';
 
 
 const feedback = document.querySelector('.feedback-form ')
-const button = document.querySelector('.feedback-form button')
-
 const formData = {}
 
 
+feedback.addEventListener('submit', onSubmit)
 
-button.addEventListener('submit', onSubmit);
 
-feedback.addEventListener('input', e => {
-formData[e.target.name] = e.target.value;
+feedback.addEventListener('input', throttle( e => {
+    formData[e.target.name] = e.target.value.trim();
 localStorage.setItem("feedback-form-state", JSON.stringify(formData))
-})
+}, 500))
 
- 
+
+function onSubmit(evt) {
+    evt.preventDefault();
+     console.log(formData)
+    evt.target.reset();
+    localStorage.removeItem('feedback-form-state');
+}
+
 
 function refreshTextarea() {
-    const savedMassage = JSON.parse(localStorage.getItem('feedback-form-state'));
-    if (savedMassage) {
-        feedback.value = savedMassage;
-
+   const savedData = JSON.parse(localStorage.getItem('feedback-form-state'));
+    if (savedData) {
+        for (const key in savedData) {
+        if (savedData.hasOwnProperty(key)) {
+            const textarea = document.querySelector(`textarea[name=${key}]`);
+            const email = document.querySelector(`input[name=${key}]`);
+          if (textarea) {
+            textarea.value = savedData[key];
+            } if (email) {
+              email.value = savedData[key];
+          }
+        }
+      }
     }
-    console.log(savedMassage)
 }
 refreshTextarea();
 
 
 
-// function onFormEmail(evt) {
-//     const massageEmail = evt.currentTarget.value.trim();
-
-//     localStorage.setItem('feedback-form-state', massageEmail);
-// }
 
 
-// function onFormTextarea(evt) {
-//     const massageTextarea = evt.currentTarget.value.trim();
-
-//     localStorage.setItem('feedback-form-state', massageTextarea);
-
-//     console.log(massage)
-// }
-
-
-function onSubmit(evt){}
